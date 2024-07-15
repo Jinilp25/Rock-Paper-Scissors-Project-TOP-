@@ -9,12 +9,6 @@ function getComputerChoice() {
         return "scissor";
 }
 
-// create a function getHumanChoice 
-function getHumanChoice() {
-    userChoice = prompt("Choose rock paper or scissor");
-    return userChoice.toLowerCase();
-}
-
 
 
 // define playGame function
@@ -39,22 +33,44 @@ function playGame() {
 
         // print who won the game and the results
         if (check_tie)
-            console.log(`It's a tie!, both are ${humanChoice}`);
+            alert(`It's a tie!, both are ${humanChoice}`);
         else if (check_win) {
-            console.log(`You win! ${humanChoice} beats ${computerChoice}`);
+            alert(`You win! ${humanChoice} beats ${computerChoice}`);
             humanScore++;
         }
         else {
-            console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
+            alert(`You lose! ${computerChoice} beats ${humanChoice}`);
             computerScore++;
         }
     }
 
-    const computerChoice = getComputerChoice();
-    const humanChoice = getHumanChoice();
-    playRound(humanChoice, computerChoice);
+
+    const humanScoreText = document.createElement("div");
+    const computerScoreText = document.createElement("div");
+    const score = document.querySelector("#scoreBoard");
+
+    const button = document.querySelector("#btn");
+    button.addEventListener("click", (e) => {
+        const humanChoice = e.target.id;
+        const computerChoice = getComputerChoice();
+        playRound(humanChoice, computerChoice);
+        humanScoreText.textContent = `Your Score: ${humanScore}`;
+        computerScoreText.textContent = `Computer Score: ${computerScore}`;
+        if (humanScore === 5 || computerScore === 5) {
+            score.removeChild(computerScoreText);
+            humanScoreText.textContent = "You win!";
+            if (computerScore === 5)
+                humanScoreText.textContent = "You lose!";
+            e.defaultPrevented();
+        }
+    })
+    humanScoreText.textContent = `Your Score: ${humanScore}`;
+    computerScoreText.textContent = `Computer Score: ${computerScore}`;
+
+
+
+    score.appendChild(humanScoreText);
+    score.appendChild(computerScoreText);
 }
 
-// call playRound function 5 times
-for(i = 0; i < 5; i++)
-    playGame();
+playGame();
